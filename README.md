@@ -65,7 +65,7 @@ pnpm run dev
 ## Supported Tokens
 
 - **ETH**: Native Ethereum token
-- **SSV**: Secret Shared Validators token
+- **SSV**: SSV token
 - **USDC**: USD Coin stablecoin
 
 ## Learn More
