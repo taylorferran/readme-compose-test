@@ -47,10 +47,8 @@ For more details, please look at the [official documentation](https://docs.compo
 
 ### Swap Flow
 
-See the [swap flow section](https://github.com/taylorferran/readme-compose-test/tree/main?tab=readme-ov-file#swap-flow) for details.
-
 <div align="center">
-  <img src="img/swapping.png" alt="Swap flow diagram" width="400" />
+  <img src="img/swapping.png" alt="Swap flow diagram" width="800" />
 </div>
 
 ### Bridge Diagrams
@@ -58,13 +56,13 @@ See the [swap flow section](https://github.com/taylorferran/readme-compose-test/
 #### ETH Bridging
 
 <div align="center">
-  <img src="img/ETH_bridging.png" alt="ETH bridging diagram" width="400" />
+  <img src="img/ETH_bridging.png" alt="ETH bridging diagram" width="800" />
 </div>
 
 #### ERC-20 Bridging
 
 <div align="center">
-  <img src="img/ERC20_bridging.png" alt="ERC-20 bridging diagram" width="400" />
+  <img src="img/ERC20_bridging.png" alt="ERC-20 bridging diagram" width="800" />
 </div>
 
 ### Technical Architecture
