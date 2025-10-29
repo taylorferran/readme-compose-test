@@ -27,9 +27,10 @@ In this demo the user can:
 
 ### Prerequisites
 - Two composed rollups: Rollup A and Rollup B
-- Deployed core contracts on each rollup:
+- Deployed contracts on each rollup:
   - Mailbox and Bridge contracts (see contracts docs: https://docs.compose.network/developers/smart-contracts/)
-  - Swap contract for token routing and settlement (see docs: https://docs.compose.network)
+  - ERC-20 tokens deployed with burn and mint functions to enable bridging
+  - Swap contract
 - Smart account infrastructure (ZeroDev Kernel + ECDSA validator)
 
 For this specific demo, these networks/contracts are already deployed and ready to use.
