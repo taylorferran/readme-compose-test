@@ -4,7 +4,17 @@
 
 ## What is Compose Network?
 
-Compose Network unites Ethereum rollups to enable instant and composable transactions, where actions across rollups can happen together in a single atomic transaction. It's powered by a Shared Publisher, a coordination layer that allows rollups to execute operations synchronously while each maintains its own sequencing and independence.
+Compose is a first-of-its-kind Shared Publisher. Compose extends Ethereum validators' functionality to enable synchronous composability across rollups, so multi-chain actions feel like one transaction and one chain.
+
+### What is the Shared Publisher?
+
+The SP (Shared Publisher) is a validator-powered coordination layer that coordinates multi-chain transactions via 2PC, aggregates cross-rollup bundles, verifies them (with ZK), and publishes a single “superblock” to L1 via L1 validators. Sequencers keep sovereignty, and the SP makes the result atomic and synchronous across chains.
+
+### How does Compose work?
+
+Compose coordinates cross-rollup transactions using a standardized Mailbox system that gives every rollup an inbox and outbox for exchanging messages. When a transaction spans multiple rollups, each sequencer simulates its local part and records any cross-chain calls as Mailbox writes. These messages are automatically sent to the target rollup’s sequencer, which inserts them into its inbox (via Mailbox.addMessage) before executing its corresponding logic. 
+
+Once all messages are exchanged, each sequencer validates its part and sends a “vote” through the Shared Publisher’s two-phase commit (2PC) protocol. If all report success, the Shared Publisher aggregates the rollup blocks into a single superblock and publishes it to Ethereum L1; if any fail, the entire bundle is rolled back. Aggregated ZK proofs confirm that everything executed correctly before final settlement on Ethereum.
 
 ## What this demo showcases
 
@@ -16,35 +26,45 @@ In this demo the user can:
 - Execute atomic cross-rollup swaps and same-rollup swaps between SSV, ETH, and USDC on Rollup A and Rollup B
 
 ### Prerequisites
-- Two composed rollups: Rollup A and Rollup B (plus Hoodi testnet (L1) for bridging)
+- Two composed rollups: Rollup A and Rollup B
 - Deployed core contracts on each rollup:
   - Mailbox and Bridge contracts (see contracts docs: https://docs.compose.network/developers/smart-contracts/)
   - Swap contract for token routing and settlement (see docs: https://docs.compose.network)
 - Smart account infrastructure (ZeroDev Kernel + ECDSA validator)
 
-For this specific demo, these contracts are already deployed and ready to use.
-
-## How It Works
-
-This demo implements the core Compose Network transaction flow:
+For this specific demo, these networks/contracts are already deployed and ready to use.
 
 ### End-to-End Transaction Flow
 1. **Account Setup**: Creates ZeroDev Kernel accounts and ECDSA validators on source and destination chains
 2. **Allowance Management**: Verifies and sets ERC-20 allowances to bridge contracts
-3. **Generate transactions**: Generate transaction data for ERC-20 allowances, ERC-20 bridging, and swap transactions
-3. **UserOperation Preparation**: Builds and signs UserOperations for both chains using `compose_buildSignedUserOpsTx` based off of the transaction data
-4. **Cross-chain Settlement**: Submits all of the transactions together using `eth_sendXTransaction` and returns the transaction hashes
+3. **Generate contract calls data**: Generate call data for ERC-20 allowances, ERC-20 bridging, and swap transactions
+4. **Bundle calls in UserOperations**: Builds UserOperations containing the contract calls with their parameters
+5. **Get transactions to handle UserOps**: Send the prepared UserOperations to the respective chain's sequencer custom RPC method `compose_buildSignedUserOpsTx`. The sequencer will act as an Account Abstraction Bundler and generate a transaction to the EntryPoint contract's `handleOps` method, to process the UserOperation
+6. **Cross-chain transaction**: Submits all of the transactions together using `eth_sendXTransaction` and returns the transaction hashes
 
-### Swap Diagram
+For more details, please look at the [official documentation](https://docs.compose.network/developers/getting-started/composable-dapps).
+
+
+### Swap Flow
+
+See the [swap flow section](https://github.com/taylorferran/readme-compose-test/tree/main?tab=readme-ov-file#swap-flow) for details.
 
 <div align="center">
-  <img src="img/cross-chain_tx.png" alt="Cross-chain transaction " width="400" />
+  <img src="img/swapping.png" alt="Swap flow diagram" width="400" />
 </div>
 
-### ERC-20 Bridge Diagram
+### Bridge Diagrams
+
+#### ETH Bridging
 
 <div align="center">
-  <img src="img/bridging.png" alt="Cross-chain transaction " width="400" />
+  <img src="img/ETH_bridging.png" alt="ETH bridging diagram" width="400" />
+</div>
+
+#### ERC-20 Bridging
+
+<div align="center">
+  <img src="img/ERC20_bridging.png" alt="ERC-20 bridging diagram" width="400" />
 </div>
 
 ### Technical Architecture
@@ -77,9 +97,9 @@ pnpm run dev
 
 ## Supported Tokens
 
-- **ETH**: Native Ethereum token
-- **SSV**: Secret Shared Validators token
-- **USDC**: USD Coin stablecoin
+- **ETH**
+- **SSV**
+- **USDC**
 
 ## Learn More
 
